@@ -1,0 +1,369 @@
+<html>
+<head>
+</head>
+	<body>
+		<style>
+		.button {
+			background-color: blue;
+			border: none;
+			color: white;
+			padding: 20px 32px;
+			text-align: center;
+			font-size: 16px;
+			display:block;
+			margin:auto;
+			}
+		</style>
+		Most owls are nocturnal animals but the snowy owls are <font color="red">NOT</font>!
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script>console.log(d3); // test if d3 is loaded  
+		// Add svg; draw default background:blue in night
+		d3.select("body")
+		  .append("svg")
+			.attr("width",480)
+			.attr("height",640)
+			.style("background-color","#060652")
+			.style("display","block")
+			.style("margin","auto")
+		
+		//Variables
+		var isDay = false;
+			
+		// DATA -  Ellipse Owl's white body white
+		var owlBodyData = [
+			{
+				"x":240,
+				"y":620,
+				"ra":300,
+				"rb":320,
+				"color":"white"
+			}
+		]
+		
+		// DATA - Circle white head , gray ear area , right eye
+		var headEarEyeData = [
+			{
+				"x":240,
+				"y":240,
+				"radius":180,
+				"color":"white"
+			},//Owl's head
+			{
+				"x":180,
+				"y":220,
+				"radius":95,
+				"color":"#f1efef"
+			},
+			{
+				"x":300,
+				"y":220,
+				"radius":95,
+				"color":"#f1efef"
+			},//Owl's ear
+			{
+				"x":320,
+				"y":220,
+				"radius":55,
+				"color":"black"
+			},
+			{
+				"x":320,
+				"y":220,
+				"radius":53,
+				"color":"rgb(255, 184, 27)"
+			},
+			{
+				"x":320,
+				"y":233,
+				"radius":30,
+				"color":"black"
+			},
+			{
+				"x":320,
+				"y":233,
+				"radius":10,
+				"color":"white"
+			}
+			//Owl's eye
+		]
+		
+		//DATA text owl's name
+		var nameData = [
+			{
+				"x":0,
+				"y":15,
+				"font":"cursive",
+				"color":"white",
+				"text":"Mr.Sleepy"
+			}		
+		]
+		
+		// DATA - Lines gray wings outline 
+		var wingOutlineData = [
+			{
+				"x1":100,
+				"y1":420,
+				"x2":90,
+				"y2":430,
+				"color":"gray"
+			},
+			{
+				"x1":380,
+				"y1":420,
+				"x2":390,
+				"y2":430,
+				"color":"gray"
+			}
+		]
+		
+		// DATA - Rectangle eyelid and feather spots
+		var eyeLidFeaSpotData = [
+			{
+				"x":110,
+				"y":270,
+				"width":105,
+				"height":3,
+			},
+			{
+				"x":260,
+				"y":165,
+				"width":120,
+				"height":73,
+				"color":"black",
+				"class":"eyelid",
+				"id":"righteyelid1"
+			},
+			{
+				"x":260,
+				"y":165,
+				"width":120,
+				"height":70,
+				"color":"#f1efef",
+				"class":"eyelid",
+				"id":"righteyelid2"
+			},//Owl's eye
+			{
+				"x":395,
+				"y":425,
+				"width":30,
+				"height":10,
+				"color":"#cac8c8"
+			},
+			{
+				"x":30,
+				"y":420,
+				"width":30,
+				"height":10,
+				"color":"#cac8c8"
+			},
+			{
+				"x":420,
+				"y":400,
+				"width":40,
+				"height":10,
+				"color":"#cac8c8"
+			},
+			{
+				"x":320,
+				"y":400,
+				"width":40,
+				"height":10,
+				"color":"#cac8c8"
+			},
+			{
+				"x":120,
+				"y":400,
+				"width":40,
+				"height":10,
+				"color":"#cac8c8"
+			},
+			{
+				"x":50,
+				"y":390,
+				"width":40,
+				"height":10,
+				"color":"#cac8c8"
+			} //feather spots
+		]
+		
+		
+		// DATA - Polygons Beak and tie
+		var beakTieData = [
+			{
+				"points":"240,270 250,310 240,330 230,310",
+				"color":"#3c0909"
+			}, //beak
+			{
+				"points":"230,360 250,360 247,380 233,380",
+				"color":"#07074e"
+			}, //top part of the tie
+			{
+				"points":"233,380 247,380 260,440 220,440",
+				"color":"#07074e"
+			}  //bottom part of the tie
+		]
+		
+		//FUNCTION: Add ellipses
+		//parameter : data (ellipse tag data include coordinate, radius x, radius y, color...)
+		function addEllipse(data)
+		{
+			d3.select("svg").selectAll("ellipse")
+				.data(data)
+				.enter().append("ellipse")
+				.attr("cx",function(d){return d.x})
+				.attr("cy",function(d){return d.y})
+				.attr("rx",function(d){return d.ra})
+				.attr("ry",function(d){return d.rb})
+				.style("fill",function(d){return d.color});
+		}
+				
+		
+		//FUNCTION: Add circles
+		//parameter : data (circle tag data include coordinate, radius, color...)
+		function addCircle(data)
+		{
+			d3.select("svg").selectAll("circle")
+			.data(data)
+			.enter().append("circle")
+			.attr("cx",function(d){return d.x})
+			.attr("cy",function(d){return d.y})
+			.attr("r",function(d){return d.radius})
+			.style("fill",function(d){return d.color});
+		}
+		
+		
+		//FUNCTION: Add Lines
+		//parameter : data (line tag data include the first point coordinate and the second point coordinate, color...)
+		function addLines(data)
+		{
+			d3.select("svg").selectAll("line")
+			.data(data)
+			.enter().append("line")
+			.attr("x1",function(d){return d.x1})
+			.attr("y1",function(d){return d.y1})
+			.attr("x2",function(d){return d.x2})
+			.attr("y2",function(d){return d.y2})
+			.style("stroke",function(d){return d.color});
+		}
+		
+		
+		
+		//FUNCTION: Add Polygons
+		//parameter : data (polygon tag data include points coordinates, color...)
+		function addPolygon(data)
+		{
+			d3.select("svg").selectAll("polygon")
+			.data(data)
+			.enter().append("polygon")
+			.attr("points",function(d){return d.points})
+			.style("fill",function(d){return d.color});
+		}
+			
+		//FUNCTION: Add Rectangles
+		//parameter : data (rect tag data include coordinate, width, height, color...)
+		function addRectangle(data)
+		{
+			d3.select("svg").selectAll("rect")
+			.data(data)
+			.enter().append("rect")
+			.attr("x",function(d){return d.x})
+			.attr("y",function(d){return d.y})
+			.attr("width",function(d){return d.width})
+			.attr("height",function(d){return d.height})
+			.attr("class",function(d){return d.class})
+			.attr("id",function(d){return d.id})
+			.style("fill",function(d){return d.color});
+		}		
+		
+
+		
+		//FUNCTION: Add texts
+		//parameter : data (text tag data include coordinate, font style, innerText...)
+		function addText(data)
+		{
+			d3.select("svg").selectAll("text")
+				.data(data)
+				.enter().append("text")
+				.attr("x",function(d){return d.x})
+				.attr("y",function(d){return d.y})
+				.attr("font-family",function(d){return d.font})
+				.style("fill",function(d){return d.color})
+				.text(function(d){return d.text});
+		}
+		
+		
+		//FUNCTION : draw the Owl - Mr.Sleepy 
+		function drawMrSleepy()
+		{
+			addEllipse(owlBodyData); //draw body
+			addCircle(headEarEyeData);  //draw head, ear and right eye
+			addLines(wingOutlineData); //draw outline of wings
+			addPolygon(beakTieData); //draw beak and tie
+			addRectangle(eyeLidFeaSpotData); //draw eye lid and feather spots
+			addText(nameData); //draw Owl's name
+		}
+		
+		//FUNCTION : switch day and night
+		function switchTime()
+		{
+			var svg = d3.select("svg");
+			var button = d3.select(".button");
+			if(isDay)
+			{
+				svg.transition()
+					.duration(2000)
+					.style("background-color","#060652");
+				gotoSleep();
+				button.transition()
+						.duration(2000)
+						.style("background-color","blue");
+				isDay = false;
+			}
+			else
+			{
+				svg.transition()
+					.duration(2000)
+					.style("background-color","#79d5ff")
+				wakeUp();
+				button.transition()
+						.duration(2000)
+						.style("background-color","orange");
+				isDay = true;
+			}
+		}
+		
+		//FUNCTION : Mr.Sleepy is not sleeping. Make eyelid rects unvisualable
+		function wakeUp()
+		{
+			d3.selectAll(".eyelid")
+				.transition()
+				.duration(2000)
+				.delay(500)
+				.attr("height","0");
+		}
+		
+		//FUNCTION : Mr.Sleepy is not sleeping.
+		function gotoSleep()
+		{
+
+			d3.select("#righteyelid1")
+				.transition()
+				.duration(2000)
+				.delay(500)
+				.attr("height","73");
+			d3.select("#righteyelid2")
+				.transition()
+				.duration(2000)
+				.delay(500)
+				.attr("height","70");
+		}
+		
+		//Let's draw Mr.Sleepy
+		drawMrSleepy();
+		//wakeUp();
+		
+		</script>
+		<button onclick="switchTime()" class="button">Switch between Day and Night</button>
+		
+	</body>
+</html>
